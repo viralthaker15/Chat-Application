@@ -20,7 +20,7 @@ const sidebarTemplate = document.querySelector('#sidebar-template').innerHTML
 
 // Options
 //const queryStringObject = qs.parse(location.search , { ignoreQueryPrefix : true })
-const {username , room} = Qs.parse(location.search , { ignoreQueryPrefix : true })
+const {username , room} = Qs.parse(location.search , { ignoreQueryPrefix : true }) //query prefix : ? //gets username room of user who joined through index.html with location
 
 const autoscroll = () => {
     //New message element
@@ -43,8 +43,18 @@ const autoscroll = () => {
     if (containerHeight - newMessageHeight <= scrollOffset) {
             $messages.scrollTop = $messages.scrollHeight 
     }
-
 }
+
+// EVENTS
+
+socket.emit('join' , {username , room} , (error)=>{
+    if(error)
+    {
+        alert(error)
+        location.href = '/'  //to redirect them to index html
+    }
+}) // to join a room
+
 
 socket.on('message' , (message) => {
     //console.log(message)
@@ -121,11 +131,3 @@ $sendLocationButton.addEventListener('click' , (e) => {
         })
     })
 })
-
-socket.emit('join' , {username , room} , (error)=>{
-    if(error)
-    {
-        alert(error)
-        location.href = '/'  //to redirect them to index html
-    }
-}) // to join a room
